@@ -32,7 +32,7 @@ public class CameraDrag : MonoBehaviour {
         }
 
         if (Input.GetMouseButton(0)) {
-            Vector3 move = Vector3.zero;
+            Vector2 move = Vector2.zero;
             move.x = -Input.GetAxis("Mouse X") * panSpeed * (1080f / Screen.height) * Mathf.Sqrt(10f * Camera.main.orthographicSize) / 5f;
             move.y = -Input.GetAxis("Mouse Y") * panSpeed * (1080f / Screen.height) * Mathf.Sqrt(10f * Camera.main.orthographicSize) / 5f;
             transform.Translate(move);

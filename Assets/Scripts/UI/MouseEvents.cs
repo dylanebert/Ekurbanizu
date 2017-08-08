@@ -18,76 +18,97 @@ public class MouseEvents : MonoBehaviour {
     private void Update() {
         if (gameController.pauseMenuShown || gameController.winScreenShown) return;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit2D roadHit = Physics2D.Raycast(ray.origin, ray.direction, 20f, 1 << 10);
-        if (roadHit.collider != null) {
-            if (mouseOverRoad != null)
-                mouseOverRoad.MouseExit();
-            mouseOverRoad = roadHit.transform.parent.GetComponent<Road>();
-            mouseOverRoad.MouseOver();
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+            Vector2 touchPos = Input.GetTouch(0).position;
+            Ray touchRay = Camera.main.ScreenPointToRay(touchPos);
+            RaycastHit2D touchHit = Physics2D.Raycast(touchRay.origin, touchRay.direction, 20f);
+            if (touchHit.collider != null) {
+                switch (touchHit.transform.gameObject.layer) {
+                    case 9:
+                        touchHit.transform.GetComponent<Tile>().MouseUp();
+                        break;
+                    case 10:
+                        touchHit.transform.parent.GetComponent<Road>().MouseUp();
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         else {
-            if (mouseOverRoad != null) {
-                mouseOverRoad.MouseExit();
-                mouseOverRoad = null;
-            }
-        }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (gameController.lens == Lens.Erase && mouseOverRoad != null) {
-            foreach(Tile tile in mouseOverTiles) {
-                tile.MouseExit();
+            RaycastHit2D roadHit = Physics2D.Raycast(ray.origin, ray.direction, 20f, 1 << 10);
+            if (roadHit.collider != null) {
+                if (mouseOverRoad != null)
+                    mouseOverRoad.MouseExit();
+                mouseOverRoad = roadHit.transform.parent.GetComponent<Road>();
+                mouseOverRoad.MouseOver();
             }
-            mouseOverTiles.Clear();
-        } else {
-            RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, 20f, 1 << 9);
-            List<Tile> hitTiles = new List<Tile>();
-            foreach (RaycastHit2D hit in hits) {
-                hitTiles.Add(hit.transform.GetComponent<Tile>());
-            }
-
-            int i = 0;
-            while (i < mouseOverTiles.Count) {
-                if (!hitTiles.Contains(mouseOverTiles[i])) {
-                    mouseOverTiles[i].MouseExit();
-                    mouseOverTiles.Remove(mouseOverTiles[i]);
-                } else {
-                    hitTiles.Remove(mouseOverTiles[i]);
-                    i++;
+            else {
+                if (mouseOverRoad != null) {
+                    mouseOverRoad.MouseExit();
+                    mouseOverRoad = null;
                 }
             }
 
-            foreach (Tile tile in hitTiles) {
-                mouseOverTiles.Add(tile);
-                tile.MouseOver();
-            }
-        }
-
-        if (Input.GetMouseButtonDown(0)) {
-            mouseDownPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-            foreach (Tile tile in mouseOverTiles) {
-                tile.MouseDown();
-            }
-        }
-
-        if (Input.GetMouseButton(0))
-            mouseDownTicks++;
-
-        if(Input.GetMouseButtonUp(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
-            if ((Camera.main.ScreenToViewportPoint(Input.mousePosition) - mouseDownPos).magnitude < .02f) {
-                if (mouseOverTiles.Count == 0 && mouseOverRoad == null && mouseDownTicks < 100) {
-                    gameController.DeselectPointerButtons();
+            if (gameController.lens == Lens.Erase && mouseOverRoad != null) {
+                foreach (Tile tile in mouseOverTiles) {
+                    tile.MouseExit();
                 }
-                else {
-                    if (mouseOverRoad != null)
-                        mouseOverRoad.MouseUp();
-                    if (mouseOverRoad == null || gameController.lens != Lens.Erase) {
-                        foreach (Tile tile in mouseOverTiles) {
-                            tile.MouseUp();
+                mouseOverTiles.Clear();
+            }
+            else {
+                RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, 20f, 1 << 9);
+                List<Tile> hitTiles = new List<Tile>();
+                foreach (RaycastHit2D hit in hits) {
+                    hitTiles.Add(hit.transform.GetComponent<Tile>());
+                }
+
+                int i = 0;
+                while (i < mouseOverTiles.Count) {
+                    if (!hitTiles.Contains(mouseOverTiles[i])) {
+                        mouseOverTiles[i].MouseExit();
+                        mouseOverTiles.Remove(mouseOverTiles[i]);
+                    }
+                    else {
+                        hitTiles.Remove(mouseOverTiles[i]);
+                        i++;
+                    }
+                }
+
+                foreach (Tile tile in hitTiles) {
+                    mouseOverTiles.Add(tile);
+                    tile.MouseOver();
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0)) {
+                mouseDownPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                foreach (Tile tile in mouseOverTiles) {
+                    tile.MouseDown();
+                }
+            }
+
+            if (Input.GetMouseButton(0))
+                mouseDownTicks++;
+
+            if (Input.GetMouseButtonUp(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+                if ((Camera.main.ScreenToViewportPoint(Input.mousePosition) - mouseDownPos).magnitude < .02f) {
+                    if (mouseOverTiles.Count == 0 && mouseOverRoad == null && mouseDownTicks < 100) {
+                        gameController.DeselectPointerButtons();
+                    }
+                    else {
+                        if (mouseOverRoad != null)
+                            mouseOverRoad.MouseUp();
+                        if (mouseOverRoad == null || gameController.lens != Lens.Erase) {
+                            foreach (Tile tile in mouseOverTiles) {
+                                tile.MouseUp();
+                            }
                         }
-                    }                    
+                    }
+                    mouseDownTicks = 0;
                 }
-                mouseDownTicks = 0;
             }
         }
     }

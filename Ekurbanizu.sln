@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ekurbanizu", "Ekurbanizu.csproj", "{089EC238-326B-09E3-214E-E40EF6930ABA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ekurbanizu.Plugins", "Ekurbanizu.Plugins.csproj", "{403704F2-48A1-6D8C-7B4C-84ABFCD2DC15}"
