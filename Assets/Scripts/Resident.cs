@@ -5,8 +5,8 @@ using System.Linq;
 
 public class Resident : MonoBehaviour {
 
-    public static float WalkSpeed = .5f;
-    public static float DriveSpeed = WalkSpeed * 4f;
+    public static float WalkSpeed = .25f;
+    public static float DriveSpeed = WalkSpeed * 5f;
 
     [HideInInspector]
     public Vector2 homePos;

@@ -78,6 +78,12 @@ public class GameController : MonoBehaviour {
     bool won;
     bool timeControlsEnabled;
 
+    private void Awake() {
+        if(Application.platform == RuntimePlatform.Android) {
+            mainUI.GetComponent<CanvasScaler>().scaleFactor = 1.2f;
+        }
+    }
+
     private void Start() {        
         try {
             sceneController = GameObject.FindGameObjectWithTag("SceneController").GetComponent<SceneController>();
@@ -144,7 +150,7 @@ public class GameController : MonoBehaviour {
                         stage = Stage.Home;
                         StartCoroutine(clock.UpdateText("At Home"));
                         timer = 0f;
-                        if (successfulDailyCommutes >= goalCommutes) {
+                        if (!won && successfulDailyCommutes >= goalCommutes) {
                             StartCoroutine(WinAnimation());
                         }
                         else {
@@ -427,16 +433,24 @@ public class GameController : MonoBehaviour {
         if(!timeControlsEnabled) {
             StartCoroutine(ShowTimeControls());            
         }
+
+        pauseButton.GetComponent<GameSpeedButton>().selected = false;
+        playButton.GetComponent<GameSpeedButton>().selected = false;
+        fastForwardButton.GetComponent<GameSpeedButton>().selected = false;
+
         Time.timeScale = gameSpeed;
         pauseButton.color = playButton.color = fastForwardButton.color = Palette.OffBlack;
         switch(gameSpeed) {
             case 0:
+                pauseButton.GetComponent<GameSpeedButton>().selected = true;
                 pauseButton.color = Palette.Gray;
                 break;
             case 1:
+                playButton.GetComponent<GameSpeedButton>().selected = true;
                 playButton.color = Palette.Gray;
                 break;
             case 2:
+                fastForwardButton.GetComponent<GameSpeedButton>().selected = true;
                 fastForwardButton.color = Palette.Gray;
                 break;
             default:

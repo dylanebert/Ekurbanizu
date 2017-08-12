@@ -35,7 +35,7 @@ public class LevelSelect : MonoBehaviour {
         uiLevels = new List<UILevel>();
         for(int i = 0; i < levels.Length; i++) {
             UILevel level = Instantiate(levelObj, main.transform).GetComponent<UILevel>();
-            level.GetComponent<RectTransform>().anchoredPosition = new Vector2(i * 234f, 0f);
+            level.GetComponent<RectTransform>().anchoredPosition = new Vector2(i * 200f, 0f);
             level.Initialize(levels[i], this, (i + 1));
             uiLevels.Add(level);
         }

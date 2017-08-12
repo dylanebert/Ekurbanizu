@@ -11,6 +11,7 @@ public class SceneController : MonoBehaviour {
 
     private void Awake() {
         DontDestroyOnLoad(this.gameObject);
+        Screen.orientation = ScreenOrientation.Landscape;
     }
 
     public void LoadMenu() {

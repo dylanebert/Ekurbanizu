@@ -431,6 +431,10 @@ MonoBehaviour:
     description: A quaint grassy island with a pleasant inland. Great fishing on the
       northeast coast.
     gridData: {fileID: 11400000, guid: 6785221abeff5484285d6e8f34795adf, type: 2}
+  - name: 
+    image: {fileID: 0}
+    description: 
+    gridData: {fileID: 11400000, guid: 5809aaf3145881a4c8747b972b71c454, type: 2}
   sceneControllerObj: {fileID: 1495905208878906, guid: d2ac58b73910967479559caf874b8ac2,
     type: 2}
   levelObj: {fileID: 1620519825958788, guid: 6cb7c347f70462f4585177860ded2f07, type: 2}

@@ -8,6 +8,7 @@ public class MouseEvents : MonoBehaviour {
     Road mouseOverRoad;
     GameController gameController;
     Vector3 mouseDownPos;
+    float touchBeganTime;
     int mouseDownTicks;
 
     private void Awake() {
@@ -18,20 +19,22 @@ public class MouseEvents : MonoBehaviour {
     private void Update() {
         if (gameController.pauseMenuShown || gameController.winScreenShown) return;
 
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
-            Vector2 touchPos = Input.GetTouch(0).position;
-            Ray touchRay = Camera.main.ScreenPointToRay(touchPos);
-            RaycastHit2D touchHit = Physics2D.Raycast(touchRay.origin, touchRay.direction, 20f);
-            if (touchHit.collider != null) {
-                switch (touchHit.transform.gameObject.layer) {
-                    case 9:
-                        touchHit.transform.GetComponent<Tile>().MouseUp();
-                        break;
-                    case 10:
-                        touchHit.transform.parent.GetComponent<Road>().MouseUp();
-                        break;
-                    default:
-                        break;
+        if (Input.touchCount > 0) {
+            if (Input.GetTouch(0).phase == TouchPhase.Began) {
+                Vector2 touchPos = Input.GetTouch(0).position;
+                Ray touchRay = Camera.main.ScreenPointToRay(touchPos);
+                RaycastHit2D touchHit = Physics2D.Raycast(touchRay.origin, touchRay.direction, 20f);
+                if (touchHit.collider != null) {
+                    switch (touchHit.transform.gameObject.layer) {
+                        case 9:
+                            touchHit.transform.GetComponent<Tile>().MouseUp();
+                            break;
+                        case 10:
+                            touchHit.transform.parent.GetComponent<Road>().MouseUp();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

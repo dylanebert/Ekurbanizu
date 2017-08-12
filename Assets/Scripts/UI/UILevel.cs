@@ -36,7 +36,7 @@ public class UILevel : MonoBehaviour {
     }
 
     private void Update() {
-        rect.localScale = Vector3.one * (1 - Mathf.Abs(rect.anchoredPosition.x + parent.anchoredPosition.x) / (float)Screen.width);
+        rect.localScale = Vector3.one * Mathf.Clamp((1 - Mathf.Abs(rect.anchoredPosition.x + parent.anchoredPosition.x) / (float)Screen.width), .75f, 1f);
     }
 
     public void Select() {

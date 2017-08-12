@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class MouseOverButton : MonoBehaviour {
 
-    public void MouseOver() {
+    public virtual void MouseOver() {
         transform.localScale = Vector3.one * 1.25f;
     }
 
-    public void MouseExit() {
+    public virtual void MouseExit() {
         transform.localScale = Vector3.one;
     }
 }

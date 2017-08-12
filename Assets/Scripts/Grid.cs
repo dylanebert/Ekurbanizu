@@ -256,7 +256,7 @@ public class Grid : MonoBehaviour {
                 foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
                     if (!path.cells.Any(c => c.tile == t)) {
                         if((t.transform.position - destination.tile.transform.position).magnitude < distFromDest) {
-                            int cost = last.cell.roadConnections.Contains(t.cell) ? 4 : 16;
+                            int cost = last.cell.roadConnections.Contains(t.cell) ? Mathf.RoundToInt(8f / Resident.DriveSpeed) : Mathf.RoundToInt(8f / Resident.WalkSpeed);
                             if (path.cost + cost <= maxPathCost) {
                                 Path p = path.Add(t.cell, cost);
                                 queue.Enqueue(p, p.cost);
@@ -301,7 +301,7 @@ public class Grid : MonoBehaviour {
                 foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
                     if (!path.cells.Any(c => c.tile == t)) {
                         if ((t.transform.position - origin.tile.transform.position).magnitude > distanceFromOrigin) {
-                            int cost = last.cell.roadConnections.Contains(t.cell) ? 4 : 16;
+                            int cost = last.cell.roadConnections.Contains(t.cell) ? Mathf.RoundToInt(8f / Resident.DriveSpeed) : Mathf.RoundToInt(8f / Resident.WalkSpeed);
                             if (path.cost + cost <= maxPathCost) {
                                 Path p = path.Add(t.cell, cost);
                                 queue.Enqueue(p, p.cost);
