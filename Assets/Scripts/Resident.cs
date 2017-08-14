@@ -5,8 +5,8 @@ using System.Linq;
 
 public class Resident : MonoBehaviour {
 
-    public static float WalkSpeed = .25f;
-    public static float DriveSpeed = WalkSpeed * 5f;
+    public static float WalkSpeed = HexMetrics.OuterRadius / 3f;
+    public static float DriveSpeedMultiplier = 4f;
 
     [HideInInspector]
     public Vector2 homePos;
@@ -127,7 +127,7 @@ public class Resident : MonoBehaviour {
                     currentCell.occupiedDirections.Remove(nextCell);
                     yield break;
                 }
-                float speed = currentCell.roadConnections.Contains(nextCell) ? DriveSpeed : WalkSpeed;
+                float speed = WalkSpeed * (currentCell.roadConnections.Contains(nextCell) ? DriveSpeedMultiplier : 1f);
                 transform.position = Vector2.MoveTowards(transform.position, dest, Time.deltaTime * speed);
                 yield return null;
             }
@@ -136,7 +136,7 @@ public class Resident : MonoBehaviour {
         while ((Vector2)transform.position != dest) {
             if (status == Status.Destroy)
                 yield break;
-            float speed = currentCell.roadConnections.Contains(nextCell) ? DriveSpeed : WalkSpeed;
+            float speed = WalkSpeed * (currentCell.roadConnections.Contains(nextCell) ? DriveSpeedMultiplier : 1f);
             transform.position = Vector2.MoveTowards(transform.position, dest, Time.deltaTime * speed);
             yield return null;
         }
@@ -146,12 +146,12 @@ public class Resident : MonoBehaviour {
     IEnumerator CreationAnimation() {
         float timer = 0f;
         while (timer < 1f) {
-            timer += Time.deltaTime * 5f;
+            timer += Time.deltaTime * 3f;
             transform.localScale = Vector3.one * Mathf.Lerp(0f, 1.25f, timer);
             yield return null;
         }
         while (timer > 0f) {
-            timer -= Time.deltaTime * 5f;
+            timer -= Time.deltaTime * 3f;
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.25f, timer);
             yield return null;
         }
@@ -166,13 +166,13 @@ public class Resident : MonoBehaviour {
         }
         float t = 0f;
         while(t < 1f) {
-            t += Time.deltaTime * 5f;
+            t += Time.deltaTime * 3f;
             transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.25f, t);
             yield return null;
         }
         t = 0f;
         while(t < 1f) {
-            t += Time.deltaTime * 5f;
+            t += Time.deltaTime * 3f;
             transform.localScale = Vector3.one * Mathf.Lerp(1.25f, 0f, t);
             yield return null;
         }

@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\HexMetrics.cs" />
     <Compile Include="Assets\Scripts\Levels\GridData.cs" />
+    <Compile Include="Assets\Scripts\Levels\LevelData.cs" />
     <Compile Include="Assets\Scripts\Priority Queue\FastPriorityQueue.cs" />
     <Compile Include="Assets\Scripts\Priority Queue\FastPriorityQueueNode.cs" />
     <Compile Include="Assets\Scripts\Priority Queue\GenericPriorityQueue.cs" />

@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour {
         } catch(System.Exception e) {
             sceneController = Instantiate(sceneControllerObj).GetComponent<SceneController>();
         }
-        GridData data = sceneController.levels[sceneController.currentLevel - 1];
+        GridData data = sceneController.levels[sceneController.currentLevel - 1].gridData;
         grid.Initialize(data, this);
         roadsAvailableText.text = " x" + grid.roadsAvailable.ToString();
         maxResidentialCapacity = grid.GetMaxResidentialCapacity();

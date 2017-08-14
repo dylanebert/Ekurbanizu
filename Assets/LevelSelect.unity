@@ -421,20 +421,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - name: Tegularacxo
-    image: {fileID: 21300000, guid: 216cd13c979e94443a4759c6aec4bfd5, type: 3}
-    description: A small, boring desert island. There's really nothing special about
-      it.
-    gridData: {fileID: 11400000, guid: faefc540a9eb5e64981ddbf4a916ccfd, type: 2}
-  - name: Mallondonano
-    image: {fileID: 21300000, guid: d7655b52b8dc43f4dbb5ac7550c0754a, type: 3}
-    description: A quaint grassy island with a pleasant inland. Great fishing on the
-      northeast coast.
-    gridData: {fileID: 11400000, guid: 6785221abeff5484285d6e8f34795adf, type: 2}
-  - name: 
-    image: {fileID: 0}
-    description: 
-    gridData: {fileID: 11400000, guid: 5809aaf3145881a4c8747b972b71c454, type: 2}
+  - {fileID: 11400000, guid: 53a36a307e277b84d9a14fd7190d82d0, type: 2}
+  - {fileID: 11400000, guid: 06eb72ea317a5a740b8d4e922c43b9a0, type: 2}
+  - {fileID: 11400000, guid: f93507b10b52d6945b85ef05eb7cfe09, type: 2}
+  - {fileID: 11400000, guid: eace03ef17c97f749bfd01d6a41f8c16, type: 2}
   sceneControllerObj: {fileID: 1495905208878906, guid: d2ac58b73910967479559caf874b8ac2,
     type: 2}
   levelObj: {fileID: 1620519825958788, guid: 6cb7c347f70462f4585177860ded2f07, type: 2}

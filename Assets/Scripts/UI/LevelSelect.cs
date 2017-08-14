@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class LevelSelect : MonoBehaviour {
 
-    public LevelData[] levels;
     public GameObject sceneControllerObj;
     public GameObject levelObj;
     public CanvasGroup main;
@@ -33,16 +32,16 @@ public class LevelSelect : MonoBehaviour {
         }
 
         uiLevels = new List<UILevel>();
-        for(int i = 0; i < levels.Length; i++) {
+        for(int i = 0; i < sceneController.levels.Length; i++) {
             UILevel level = Instantiate(levelObj, main.transform).GetComponent<UILevel>();
             level.GetComponent<RectTransform>().anchoredPosition = new Vector2(i * 200f, 0f);
-            level.Initialize(levels[i], this, (i + 1));
+            level.Initialize(sceneController.levels[i], this, (i + 1));
             uiLevels.Add(level);
         }
 
         currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-        if (currentLevel > levels.Length)
-            currentLevel = levels.Length;
+        if (currentLevel > sceneController.levels.Length)
+            currentLevel = sceneController.levels.Length;
         focus = uiLevels[currentLevel - 1];
     }
 
@@ -64,13 +63,4 @@ public class LevelSelect : MonoBehaviour {
             uiLevel.selected = false;
         focus = level;
     }
-}
-
-[System.Serializable]
-public class LevelData {
-    public string name;
-    public Sprite image;
-    [TextArea]
-    public string description;
-    public GridData gridData;
 }

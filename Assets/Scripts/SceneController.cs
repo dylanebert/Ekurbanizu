@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour {
 
-    public GridData[] levels;
+    public LevelData[] levels;
 
     public int currentLevel = 1;
 

@@ -7,6 +7,7 @@ using Priority_Queue;
 public class Grid : MonoBehaviour {
 
     public static int maxPathCacheAge = 1000; //in iterations
+    public static float maxPathCost = 5f / Resident.WalkSpeed;
 
     public Tile emptyTileObj;
     public GameObject roadObj;
@@ -217,7 +218,6 @@ public class Grid : MonoBehaviour {
 
     public IEnumerator CalculateCommute(Resident resident, Cell origin, Cell destination = null) {
         calculatingCommute = true;
-        float maxPathCost = 48f;
         int iterations = 0;
         if(destination != null) {
             if (pathCache.ContainsKey(origin)) {
@@ -256,7 +256,7 @@ public class Grid : MonoBehaviour {
                 foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
                     if (!path.cells.Any(c => c.tile == t)) {
                         if((t.transform.position - destination.tile.transform.position).magnitude < distFromDest) {
-                            int cost = last.cell.roadConnections.Contains(t.cell) ? Mathf.RoundToInt(8f / Resident.DriveSpeed) : Mathf.RoundToInt(8f / Resident.WalkSpeed);
+                            float cost = last.cell.roadConnections.Contains(t.cell) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
                             if (path.cost + cost <= maxPathCost) {
                                 Path p = path.Add(t.cell, cost);
                                 queue.Enqueue(p, p.cost);
@@ -301,7 +301,7 @@ public class Grid : MonoBehaviour {
                 foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
                     if (!path.cells.Any(c => c.tile == t)) {
                         if ((t.transform.position - origin.tile.transform.position).magnitude > distanceFromOrigin) {
-                            int cost = last.cell.roadConnections.Contains(t.cell) ? Mathf.RoundToInt(8f / Resident.DriveSpeed) : Mathf.RoundToInt(8f / Resident.WalkSpeed);
+                            float cost = last.cell.roadConnections.Contains(t.cell) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
                             if (path.cost + cost <= maxPathCost) {
                                 Path p = path.Add(t.cell, cost);
                                 queue.Enqueue(p, p.cost);
@@ -338,7 +338,7 @@ public class Grid : MonoBehaviour {
 
 public class Path {
     public List<Cell> cells;
-    public int cost;
+    public float cost;
     public int age;
 
     public Path() {
@@ -349,7 +349,7 @@ public class Path {
         this.cells = new List<Cell>(cells);
     }
 
-    public Path Add(Cell cell, int cost) {
+    public Path Add(Cell cell, float cost) {
         Path path = new Path(cells);
         path.cells.Add(cell);
         path.cost = this.cost + cost;
