@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d736131477aac8946888318494e544cc, type: 3}
+  m_Name: Goal
+  m_EditorClassIdentifier: 
+  title: Goal
+  sprite: {fileID: 21300000, guid: 49132260f85d1d64f8d67836c1cd1590, type: 3}
+  spriteColor: {r: 0.34117648, g: 0.83921576, b: 0.5529412, a: 1}
+  text: 'In Ekurbanizu, you''re an urban planner whose job is to make sure people
+    can get to and from work.
+
+
+    To win, maximize number of commutes per day.'

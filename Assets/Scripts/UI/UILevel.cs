@@ -15,15 +15,11 @@ public class UILevel : MonoBehaviour {
     [HideInInspector]
     public bool selected;
 
-    CanvasGroup main;
-    RectTransform parent;
     LevelSelect levelSelect;
     int level;
 
     private void Awake() {
-        main = GetComponent<CanvasGroup>();
         rect = GetComponent<RectTransform>();
-        parent = transform.parent.GetComponentInParent<RectTransform>();
     }
 
     public void Initialize(LevelData levelData, LevelSelect levelSelect, int level) {
@@ -33,10 +29,6 @@ public class UILevel : MonoBehaviour {
         description.text = levelData.description;
         this.level = level;
         goal.text = "Goal: " + levelData.gridData.goalCommutes + " daily commutes";
-    }
-
-    private void Update() {
-        rect.localScale = Vector3.one * Mathf.Clamp((1 - Mathf.Abs(rect.anchoredPosition.x + parent.anchoredPosition.x) / (float)Screen.width), .75f, 1f);
     }
 
     public void Select() {

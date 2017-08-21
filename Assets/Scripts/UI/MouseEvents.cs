@@ -17,7 +17,7 @@ public class MouseEvents : MonoBehaviour {
     }
 
     private void Update() {
-        if (gameController.pauseMenuShown || gameController.winScreenShown) return;
+        if (gameController.activeWindow != null) return;
 
         if (Input.touchCount > 0) {
             if (Input.GetTouch(0).phase == TouchPhase.Began) {
@@ -95,6 +95,7 @@ public class MouseEvents : MonoBehaviour {
 
             if (Input.GetMouseButton(0))
                 mouseDownTicks++;
+
 
             if (Input.GetMouseButtonUp(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
                 if ((Camera.main.ScreenToViewportPoint(Input.mousePosition) - mouseDownPos).magnitude < .02f) {

@@ -10,18 +10,21 @@ public class Empty : Tile {
                 baseColor = Palette.EmptyTile;
                 highlightedColor = baseColor;
                 glow.enabled = false;
+                indicator.text = "";
                 break;
             case Lens.Residential:
                 baseColor = Palette.Gradient3(Palette.ResidentialCapacityMin, Palette.ResidentialCapacityMid, Palette.ResidentialCapacityMax, (cell.residentialCapacity - 1) / (float)gameController.maxResidentialCapacity);
                 highlightedColor = Palette.ResidentialTile;
-                glow.color = Color.white;
+                glow.color = Palette.OffBlack;
                 glow.enabled = true;
+                indicator.text = cell.residentialCapacity.ToString();
                 break;
             case Lens.Industrial:
                 baseColor = Palette.Gradient3(Palette.IndustrialCapacityMin, Palette.IndustrialCapacityMid, Palette.IndustrialCapacityMax, (cell.industrialCapacity - 1) / (float)gameController.maxIndustrialCapacity);
                 highlightedColor = Palette.IndustrialTile;
-                glow.color = Color.white;
+                glow.color = Palette.OffBlack;
                 glow.enabled = true;
+                indicator.text = cell.industrialCapacity.ToString();
                 break;
             case Lens.Road:
                 baseColor = Palette.EmptyTile;
@@ -31,7 +34,7 @@ public class Empty : Tile {
             case Lens.Erase:
                 baseColor = Palette.EmptyTile;
                 highlightedColor = baseColor;
-                glow.color = Palette.OffBlack;
+                glow.color = Color.white;
                 glow.enabled = true;
                 break;
             default:
@@ -55,29 +58,10 @@ public class Empty : Tile {
         }
     }
 
-    public override void MouseOver() {
-        if (!Input.GetMouseButton(0)) {
-            switch (gameController.lens) {
-                case Lens.Residential:
-                    foreach (Cell adj in cell.adjacent) {
-                        adj.tile.SetColor(Palette.Gradient3(Palette.ResidentialCapacityMin, Palette.ResidentialCapacityMid, Palette.ResidentialCapacityMax, adj.residentialCapacity / (float)gameController.maxResidentialCapacity));
-                    }
-                    break;
-                case Lens.Industrial:
-                    foreach (Cell adj in cell.adjacent) {
-                        adj.tile.SetColor(Palette.Gradient3(Palette.IndustrialCapacityMin, Palette.IndustrialCapacityMid, Palette.IndustrialCapacityMax, adj.industrialCapacity / (float)gameController.maxIndustrialCapacity));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        base.MouseOver();
-    }
-
     public override void MouseExit() {
         foreach(Cell adj in cell.adjacent) {
-            adj.tile.UpdateColor();
+            if(adj.tile != null)
+                adj.tile.UpdateColor();
         }
         base.MouseExit();
     }

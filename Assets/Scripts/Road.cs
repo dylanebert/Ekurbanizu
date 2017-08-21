@@ -64,11 +64,19 @@ public class Road : MonoBehaviour {
             SetColor(Palette.OffBlack);
             active = true;
             cellA.roadConnections.Add(cellB);
+            if (!cellA.adjacent.Contains(cellB))
+                cellA.adjacent.Add(cellB);
             cellB.roadConnections.Add(cellA);
+            if (!cellB.adjacent.Contains(cellA))
+                cellB.adjacent.Add(cellA);
             gameController.AddRoad();
         } else if(gameController.lens == Lens.Erase) {
             cellA.roadConnections.Remove(cellB);
             cellB.roadConnections.Remove(cellA);
+            if (cellA.tile == null || cellB.tile == null) {
+                cellA.adjacent.Remove(cellB);
+                cellB.adjacent.Remove(cellA);
+            }
             active = false;
             SetColor(Palette.EmptyTileHighlighted);
             gameController.RemoveRoad();

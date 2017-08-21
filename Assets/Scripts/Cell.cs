@@ -29,12 +29,24 @@ public class Cell : MonoBehaviour {
 
     public void Initialize(CellData cellData) {
         this.cellData = cellData;
+
+        Vector2 position;
+        position.x = (cellData.coords.x + Mathf.Abs(cellData.coords.y) % 2 / 2f - .5f) * HexMetrics.InnerRadius * 2f;
+        position.y = (cellData.coords.y) * HexMetrics.OuterRadius * 1.5f;
+        transform.localPosition = position;
+    }
+
+    public void Initialize(Vector2 coords) {
+        Vector2 position;
+        position.x = (coords.x + Mathf.Abs(coords.y) % 2 / 2f - .5f) * HexMetrics.InnerRadius * 2f;
+        position.y = (coords.y) * HexMetrics.OuterRadius * 1.5f;
+        transform.localPosition = position;
     }
 
     public void CalculateAdjacent() {
-        foreach (Collider2D col in Physics2D.OverlapCircleAll(tile.transform.position, HexMetrics.OuterRadius, 1 << 9)) {
-            if (col.gameObject.GetInstanceID() != tile.gameObject.GetInstanceID()) {
-                adjacent.Add(col.GetComponent<Tile>().cell);
+        foreach (Collider2D col in Physics2D.OverlapCircleAll(transform.position, HexMetrics.OuterRadius, 1 << 12)) {
+            if (tile == null || col.gameObject.GetInstanceID() != tile.gameObject.GetInstanceID()) {
+                adjacent.Add(col.GetComponent<Cell>());
             }
         }
     }

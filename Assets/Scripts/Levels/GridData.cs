@@ -6,6 +6,8 @@ using UnityEngine;
 public class GridData : ScriptableObject {
 
     public CellData[] cellData;
+    public Bridge[] bridges;
+    public TipData[] tips;
 
     [HideInInspector]
     public int roadCount;
@@ -43,4 +45,9 @@ public class CellData {
     public bool enabled = true;
     public int baseResidentialCapacity = 1;
     public int baseIndustrialCapacity = 1;    
+}
+
+[System.Serializable]
+public class Bridge {
+    public Vector2 coords;
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ResidentialButton : LensButton {
 
     private void Start() {
-        baseColor = Palette.ResidentialCapacityMin;
+        baseColor = Palette.ResidentialTile;
         image.color = baseColor;
     }
 

@@ -53,7 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - {fileID: 11400000, guid: 53a36a307e277b84d9a14fd7190d82d0, type: 2}
-  - {fileID: 11400000, guid: 06eb72ea317a5a740b8d4e922c43b9a0, type: 2}
   - {fileID: 11400000, guid: f93507b10b52d6945b85ef05eb7cfe09, type: 2}
   - {fileID: 11400000, guid: eace03ef17c97f749bfd01d6a41f8c16, type: 2}
   currentLevel: 1

@@ -11,9 +11,6 @@ public class Residential : Tile {
     float birthTimer;
 
     private void Start() {
-        foreach(Cell cell in cell.adjacent) {
-            cell.tile.IncreaseResidentialCapacity();
-        }
         gameController.UpdateTileColors();
         birthTimer = gameController.birthInterval - 1f;
     }
@@ -76,20 +73,23 @@ public class Residential : Tile {
                 baseColor = Palette.ResidentialTile;
                 highlightedColor = baseColor;
                 glow.enabled = false;
+                indicator.text = "";
                 break;
             case Lens.Residential:
                 baseColor = Palette.Gradient3(Palette.ResidentialCapacityMin, Palette.ResidentialCapacityMid, Palette.ResidentialCapacityMax, (cell.residentialCapacity - 1) / (float)gameController.maxResidentialCapacity);
                 baseColor = Color.Lerp(baseColor, Palette.Gray, .3f);
                 highlightedColor = baseColor;
-                glow.color = Palette.OffBlack;
+                glow.color = Color.white;
                 glow.enabled = true;
+                indicator.text = cell.residentialCapacity.ToString();
                 break;
             case Lens.Industrial:
                 baseColor = Palette.Gradient3(Palette.IndustrialCapacityMin, Palette.IndustrialCapacityMid, Palette.IndustrialCapacityMax, (cell.industrialCapacity - 1) / (float)gameController.maxIndustrialCapacity);
                 baseColor = Color.Lerp(baseColor, Palette.Gray, .3f);
                 highlightedColor = baseColor;
-                glow.color = Palette.OffBlack;
+                glow.color = Color.white;
                 glow.enabled = true;
+                indicator.text = cell.industrialCapacity.ToString();
                 break;
             case Lens.Road:
                 baseColor = Palette.ResidentialTileHighlighted;
@@ -99,7 +99,7 @@ public class Residential : Tile {
             case Lens.Erase:
                 baseColor = Palette.ResidentialTileHighlighted;
                 highlightedColor = Palette.EmptyTile;
-                glow.color = Color.white;
+                glow.color = Palette.OffBlack;
                 glow.enabled = true;
                 break;
             default:

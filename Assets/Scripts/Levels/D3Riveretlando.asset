@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ec75bde43cbb334ea089dacbe4d8ee7, type: 3}
+  m_Name: D3Riveretlando
+  m_EditorClassIdentifier: 
+  cellData:
+  - coords: {x: 0, y: 0}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 0}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 2, y: 0}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 3, y: 0}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 0}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 0}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: -1, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 0, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 2, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 3, y: 1}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 1}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 0, y: 2}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 2}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 5
+  - coords: {x: 2, y: 2}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 6
+  - coords: {x: 3, y: 2}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 2}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 2}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: -1, y: 3}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 1
+  - coords: {x: 0, y: 3}
+    enabled: 1
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 3}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 4
+  - coords: {x: 2, y: 3}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 5
+  - coords: {x: 3, y: 3}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 3}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 3}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 0, y: 4}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 4}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 2, y: 4}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 2
+  - coords: {x: 3, y: 4}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 4}
+    enabled: 1
+    baseResidentialCapacity: 2
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 4}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 1
+  - coords: {x: -1, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 0, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 1, y: 5}
+    enabled: 1
+    baseResidentialCapacity: 3
+    baseIndustrialCapacity: 1
+  - coords: {x: 2, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 3, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 4, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  - coords: {x: 5, y: 5}
+    enabled: 0
+    baseResidentialCapacity: 1
+    baseIndustrialCapacity: 1
+  bridges:
+  - coords: {x: 2, y: 1}
+  - coords: {x: 3, y: 2}
+  - coords: {x: 3, y: 3}
+  - coords: {x: 4, y: 3}
+  - coords: {x: 3, y: 4}
+  tips:
+  - {fileID: 11400000, guid: 4115c1e8fc6ecce4dbec7fb204af1d66, type: 2}
+  roadCount: 12
+  mapSize: {x: 6, y: 6}
+  goalCommutes: 40

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class IndustrialButton : LensButton {
 
     private void Start() {
-        baseColor = Palette.IndustrialCapacityMin;
+        baseColor = Palette.IndustrialTile;
         image.color = baseColor;
     }
 

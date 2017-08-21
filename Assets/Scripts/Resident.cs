@@ -118,11 +118,11 @@ public class Resident : MonoBehaviour {
 
     IEnumerator WalkToNext() {
         moving = true;
-        Vector2 dest = nextCell.tile.transform.position;
+        Vector2 dest = nextCell.transform.position;
         if (currentCell != nextCell) {
             while (currentCell.occupiedDirections.Contains(nextCell)) yield return new WaitForSeconds(.1f);
             currentCell.occupiedDirections.Add(nextCell);
-            while (Vector2.Distance(transform.position, currentCell.tile.transform.position) < .25f) {
+            while (Vector2.Distance(transform.position, currentCell.transform.position) < .25f) {
                 if (status == Status.Destroy) {
                     currentCell.occupiedDirections.Remove(nextCell);
                     yield break;
@@ -144,15 +144,17 @@ public class Resident : MonoBehaviour {
     }
 
     IEnumerator CreationAnimation() {
-        float timer = 0f;
-        while (timer < 1f) {
-            timer += Time.deltaTime * 3f;
-            transform.localScale = Vector3.one * Mathf.Lerp(0f, 1.25f, timer);
+        float t = 0f;
+        while (t < 1f) {
+            t += Time.deltaTime * 3f;
+            float v = Mathf.Sin(Mathf.PI * t / 2f);
+            transform.localScale = Vector3.one * Mathf.Lerp(0f, 1.25f, v);
             yield return null;
         }
-        while (timer > 0f) {
-            timer -= Time.deltaTime * 3f;
-            transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.25f, timer);
+        while (t > 0f) {
+            t -= Time.deltaTime * 5f;
+            float v = Mathf.Sin(Mathf.PI * (1 - t) / 2f);
+            transform.localScale = Vector3.one * Mathf.Lerp(1.25f, 1f, v);
             yield return null;
         }
     }
@@ -166,14 +168,16 @@ public class Resident : MonoBehaviour {
         }
         float t = 0f;
         while(t < 1f) {
-            t += Time.deltaTime * 3f;
-            transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.25f, t);
+            t += Time.deltaTime * 5f;
+            float v = Mathf.Sin(Mathf.PI * t / 2f);
+            transform.localScale = Vector3.one * Mathf.Lerp(1f, 1.25f, v);
             yield return null;
         }
         t = 0f;
         while(t < 1f) {
             t += Time.deltaTime * 3f;
-            transform.localScale = Vector3.one * Mathf.Lerp(1.25f, 0f, t);
+            float v = Mathf.Sin(Mathf.PI * (1 - t) / 2f);
+            transform.localScale = Vector3.one * Mathf.Lerp(0f, 1.25f, v);
             yield return null;
         }
         Destroy(this.gameObject);

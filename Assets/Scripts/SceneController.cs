@@ -7,11 +7,16 @@ public class SceneController : MonoBehaviour {
 
     public LevelData[] levels;
 
-    public int currentLevel = 1;
+    public int currentLevel;
 
     private void Awake() {
         DontDestroyOnLoad(this.gameObject);
         Screen.orientation = ScreenOrientation.Landscape;
+        currentLevel = Mathf.Min(PlayerPrefs.GetInt("CurrentLevel", 1), levels.Length);
+    }
+
+    public void ResetPlayerPrefs() {
+        PlayerPrefs.DeleteAll();
     }
 
     public void LoadMenu() {
@@ -26,9 +31,13 @@ public class SceneController : MonoBehaviour {
 
     public void LoadLevel(int level) {
         Time.timeScale = 1;
-        currentLevel = level;
-        PlayerPrefs.SetInt("CurrentLevel", level);
-        SceneManager.LoadScene(1);
+        if (level <= levels.Length) {
+            currentLevel = level;
+            PlayerPrefs.SetInt("CurrentLevel", level);
+            SceneManager.LoadScene(1);
+        } else {
+            LoadMenu();
+        }
     }
 
     public void Exit() {

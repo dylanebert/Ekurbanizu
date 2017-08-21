@@ -26,7 +26,7 @@ public class CameraDrag : MonoBehaviour {
     }
 
     private void Update() {
-        if (gameController.pauseMenuShown || gameController.winScreenShown) return;
+        if (gameController.activeWindow != null) return;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0) {

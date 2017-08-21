@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour {
 
     public SpriteRenderer glow;
     public string typename;
+    public Text indicator;
 
     [HideInInspector]
     public Cell cell;
@@ -30,11 +32,6 @@ public class Tile : MonoBehaviour {
     public void Initialize(Cell cell) {
         this.cell = cell;
         cell.tile = this;
-
-        Vector2 position;
-        position.x = (cell.cellData.coords.x + Mathf.Abs(cell.cellData.coords.y) % 2 / 2f - .5f) * HexMetrics.InnerRadius * 2f;
-        position.y = (cell.cellData.coords.y) * HexMetrics.OuterRadius * 1.5f;
-        transform.localPosition = position;
     }
 
     public Vector2 FillPosition(Resident resident) {

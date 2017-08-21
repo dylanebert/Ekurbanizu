@@ -4,21 +4,21 @@ using UnityEngine;
 
 public static class Palette {
 
-    public static Color OffBlack = Color255(79, 79, 79);
+    public static Color OffBlack = Color255(50, 50, 50);
     public static Color Gray = Color255(182, 197, 198);
 
     public static Color EmptyTile = Color.white;
     public static Color EmptyTileHighlighted = Color255(236, 240, 241);    
 
-    public static Color ResidentialCapacityMin = Color255(193, 237, 207);
-    public static Color ResidentialCapacityMid = Color255(44, 204, 114);
-    public static Color ResidentialCapacityMax = Color255(107, 172, 130);
+    public static Color ResidentialCapacityMin = Color255(229, 245, 249);
+    public static Color ResidentialCapacityMid = Color255(153, 216, 201);
+    public static Color ResidentialCapacityMax = Color255(44, 162, 95);
     public static Color ResidentialTile = Color255(102, 232, 157);
     public static Color ResidentialTileHighlighted = Color255(142, 249, 188);
 
-    public static Color IndustrialCapacityMin = Color255(248, 204, 166);
-    public static Color IndustrialCapacityMid = Color255(242, 196, 14);
-    public static Color IndustrialCapacityMax = Color255(198, 109, 14);
+    public static Color IndustrialCapacityMin = Color255(255, 247, 188);
+    public static Color IndustrialCapacityMid = Color255(254, 196, 79);
+    public static Color IndustrialCapacityMax = Color255(217, 95, 79);
     public static Color IndustrialTile = Color255(255, 221, 15);
     public static Color IndustrialTileHighlighted = Color255(255, 233, 150);
 

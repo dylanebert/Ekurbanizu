@@ -17,6 +17,7 @@ public class LevelSelect : MonoBehaviour {
     RectTransform mainRect;
     List<UILevel> uiLevels;
     UILevel focus;
+    Vector2 vel;
     int currentLevel;
 
     private void Awake() {
@@ -46,9 +47,8 @@ public class LevelSelect : MonoBehaviour {
     }
 
     private void Update() {
-        if (mainRect.anchoredPosition.x != -focus.rect.anchoredPosition.x) {
-            float speed = Mathf.Clamp(3 * Mathf.Abs(mainRect.anchoredPosition.x + focus.rect.anchoredPosition.x), 500f, 5000f);
-            mainRect.anchoredPosition = Vector2.MoveTowards(mainRect.anchoredPosition, -focus.rect.anchoredPosition, Time.deltaTime * speed);
+        if (Mathf.Abs(mainRect.anchoredPosition.x + focus.rect.anchoredPosition.x) > 5f) {
+            mainRect.anchoredPosition = Vector2.SmoothDamp(mainRect.anchoredPosition, -focus.rect.anchoredPosition, ref vel, .2f, float.MaxValue, Time.deltaTime);
         } else if(!focus.selected) {
             focus.selected = true;
         }

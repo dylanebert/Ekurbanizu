@@ -122,6 +122,11 @@
     <Compile Include="Assets\Scripts\UI\ResidentialButton.cs" />
     <Compile Include="Assets\Scripts\UI\RoadButton.cs" />
     <Compile Include="Assets\Scripts\UI\UILevel.cs" />
+    <Compile Include="Assets\Scripts\UI\Windows\PauseWindow.cs" />
+    <Compile Include="Assets\Scripts\UI\Windows\TipData.cs" />
+    <Compile Include="Assets\Scripts\UI\Windows\Tips.cs" />
+    <Compile Include="Assets\Scripts\UI\Windows\Window.cs" />
+    <Compile Include="Assets\Scripts\UI\Windows\WinWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />

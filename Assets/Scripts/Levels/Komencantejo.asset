@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ccf678864e3ca4488780683383b94dc, type: 3}
   m_Name: Komencantejo
   m_EditorClassIdentifier: 
-  image: {fileID: 0}
-  description: For figuring out how this game works.
+  image: {fileID: 21300000, guid: c350680e5371fe04eb3e38e815073d62, type: 3}
+  description: A simple islet. For learning the basics.
   gridData: {fileID: 11400000, guid: 020eb7ea3a67b894e93438ed6397ba3e, type: 2}

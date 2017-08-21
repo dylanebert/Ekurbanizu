@@ -6,7 +6,7 @@ using Priority_Queue;
 
 public class Grid : MonoBehaviour {
 
-    public static int maxPathCacheAge = 1000; //in iterations
+    public static int maxPathCacheAge = 10; //in iterations
     public static float maxPathCost = 5f / Resident.WalkSpeed;
 
     public Tile emptyTileObj;
@@ -15,6 +15,8 @@ public class Grid : MonoBehaviour {
 
     [HideInInspector]
     public List<Cell> cells;
+    [HideInInspector]
+    public List<Cell> bridgeCells;
     [HideInInspector]
     public GridData gridData;
     [HideInInspector]
@@ -27,12 +29,14 @@ public class Grid : MonoBehaviour {
     public List<Industrial> industrialTiles;
     [HideInInspector]
     public Stack<Resident> residents;
+    [HideInInspector]
+    public List<Road> roads;
+    [HideInInspector]
+    public Dictionary<Vector2, Cell> tileDict;
 
     GameController gameController;    
-    List<Road> roads;
     Dictionary<Cell, List<Path>> pathCache;
 
-    int residentialCapacity;
     int industrialCapacity;
     bool calculatingCommute;
 
@@ -48,12 +52,15 @@ public class Grid : MonoBehaviour {
         }
 
         cells = new List<Cell>();
+        roads = new List<Road>();
+        bridgeCells = new List<Cell>();
         residentialTiles = new List<Residential>();
         industrialTiles = new List<Industrial>();
         pathCache = new Dictionary<Cell, List<Path>>();
+        tileDict = new Dictionary<Vector2, Cell>();
 
         float offsetX = (-(gridData.mapSize.x / 2f) + 1 + (gridData.mapSize.x % 2 == 0 ? .5f : 0)) * HexMetrics.InnerRadius * 2f;
-        float offsetY = (-(gridData.mapSize.y / 2f) + .5f) * HexMetrics.InnerRadius * 2f;
+        float offsetY = (-(gridData.mapSize.y / 2f) + .5f + (gridData.mapSize.y % 2 == 0 ? .25f : 0)) * HexMetrics.InnerRadius * 2f;
         transform.position = new Vector2(offsetX, offsetY);
         foreach(CellData cellData in gridData.cellData) {
             if (!cellData.enabled) continue;
@@ -67,18 +74,18 @@ public class Grid : MonoBehaviour {
             cell.imaginaryResidentialCapacity = 1;
             cell.roadConnections = new List<Cell>();
             cells.Add(cell);
+            tileDict.Add(cellData.coords, cell);
         }
 
-        roads = new List<Road>();
         List<CellTuple> visited = new List<CellTuple>();
         foreach (Cell cell in cells) {
             cell.CalculateAdjacent();
-            foreach (Tile adj in cell.adjacent.Select(t => t.tile).ToList()) {
-                CellTuple tuple = new CellTuple(cell, adj.cell);
+            foreach (Cell adj in cell.adjacent) {
+                CellTuple tuple = new CellTuple(cell, adj);
                 if (!visited.Contains(tuple)) {
                     Road road = Instantiate(roadObj, transform).GetComponent<Road>();
-                    road.SetPositions(cell.tile.transform.position + Vector3.back * 3, adj.transform.position + Vector3.back * 3);
-                    road.Initialize(cell, adj.cell);
+                    road.SetPositions(cell.transform.position + Vector3.back * 3, adj.transform.position + Vector3.back * 3);
+                    road.Initialize(cell, adj);
                     roads.Add(road);
                     visited.Add(tuple);
                     visited.Add(tuple.Complement());
@@ -86,33 +93,37 @@ public class Grid : MonoBehaviour {
             }
         }
 
+        foreach (Bridge bridge in gridData.bridges) {
+            Cell cell = Instantiate(cellObj, this.transform).GetComponent<Cell>();
+            cell.Initialize(bridge.coords);
+            bridgeCells.Add(cell);
+        }
+
+        visited.Clear();
+        foreach(Cell cell in bridgeCells) {
+            cell.CalculateAdjacent();
+            foreach (Cell adj in cell.adjacent) {
+                CellTuple tuple = new CellTuple(cell, adj);
+                if (!visited.Contains(tuple)) {
+                    Road road = Instantiate(roadObj, transform).GetComponent<Road>();
+                    road.SetPositions(cell.transform.position + Vector3.back * 3, adj.transform.position + Vector3.back * 3);
+                    road.Initialize(cell, adj);
+                    roads.Add(road);
+                    visited.Add(tuple);
+                    visited.Add(tuple.Complement());
+                }
+            }
+            cell.adjacent.Clear();
+        }
+        
+        List<Cell> combinedCells = new List<Cell>(cells.Concat(bridgeCells));
+        foreach (Cell cell in combinedCells) {
+            
+        }
+
         roadsAvailable = gridData.roadCount;
 
         StartCoroutine(ContinousCalculateCommutes());
-    }
-
-    public int GetMaxResidentialCapacity() {
-        int max = 1;
-
-        foreach(Cell cell in cells) {
-            if(cell.cellData.baseResidentialCapacity > max) {
-                max = cell.cellData.baseResidentialCapacity;
-            }
-        }
-
-        return max + 6;
-    }
-
-    public int GetMaxIndustrialCapacity() {
-        int max = 1;
-
-        foreach(Cell cell in cells) {
-            if(cell.cellData.baseIndustrialCapacity > max) {
-                max = cell.cellData.baseIndustrialCapacity;
-            }
-        }
-
-        return max + 6;
     }
 
     public void ShowRoads(bool show) {
@@ -124,7 +135,7 @@ public class Grid : MonoBehaviour {
     }
     
     public void ReplaceTile(GameObject newTileObj, Tile original) {
-        Tile tile = Instantiate(newTileObj, this.transform).GetComponent<Tile>();
+        Tile tile = Instantiate(newTileObj, original.cell.transform).GetComponent<Tile>();
         tile.Initialize(original.cell);
         tile.UpdateColor();
         switch(tile.typename) {
@@ -143,8 +154,6 @@ public class Grid : MonoBehaviour {
             case "Empty":
                 switch(original.typename) {
                     case "Residential":
-                        foreach (Cell adj in original.cell.adjacent)
-                            adj.tile.DecreaseResidentialCapacity();
                         Stack<Resident> residentStack = new Stack<Resident>(((Residential)original).residents);
                         while (residentStack.Count > 0) {
                             Resident resident = residentStack.Pop();
@@ -157,8 +166,6 @@ public class Grid : MonoBehaviour {
                         }
                         break;
                     case "Industrial":
-                        foreach (Cell adj in original.cell.adjacent)
-                            adj.tile.DecreaseIndustrialCapacity();
                         Stack<Resident> workerStack = new Stack<Resident>(((Industrial)original).workers);
                         while (workerStack.Count > 0) {
                             Resident resident = workerStack.Pop();
@@ -221,7 +228,7 @@ public class Grid : MonoBehaviour {
         int iterations = 0;
         if(destination != null) {
             if (pathCache.ContainsKey(origin)) {
-                Path path = pathCache[origin].Find(p => p.cells.Last().tile == destination);
+                Path path = pathCache[origin].Find(p => p.cells.Last() == destination);
                 if (path != null) {
                     if (++path.age > maxPathCacheAge)
                         pathCache[origin].Remove(path);
@@ -240,9 +247,9 @@ public class Grid : MonoBehaviour {
                     yield return null;
                 }
                 Path path = queue.Dequeue();
-                Tile last = path.cells.Last().tile;
+                Cell last = path.cells.Last();
 
-                if (destination == last.cell) {
+                if (destination == last) {
                     if (!pathCache.ContainsKey(origin))
                         pathCache.Add(origin, new List<Path> { path });
                     else
@@ -252,15 +259,13 @@ public class Grid : MonoBehaviour {
                     yield break;
                 }
 
-                float distFromDest = (last.transform.position - destination.tile.transform.position).magnitude;
-                foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
-                    if (!path.cells.Any(c => c.tile == t)) {
-                        if((t.transform.position - destination.tile.transform.position).magnitude < distFromDest) {
-                            float cost = last.cell.roadConnections.Contains(t.cell) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
-                            if (path.cost + cost <= maxPathCost) {
-                                Path p = path.Add(t.cell, cost);
-                                queue.Enqueue(p, p.cost);
-                            }
+                float distFromDest = (last.transform.position - destination.transform.position).magnitude;
+                foreach (Cell c in last.adjacent) {
+                    if (!path.cells.Contains(c)) {
+                        float cost = last.roadConnections.Contains(c) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
+                        if (path.cost + cost <= maxPathCost) {
+                            Path p = path.Add(c, cost);
+                            queue.Enqueue(p, p.cost);
                         }
                     }
                 }
@@ -283,10 +288,10 @@ public class Grid : MonoBehaviour {
                     yield return null;
                 }
                 Path path = queue.Dequeue();
-                Tile last = path.cells.Last().tile;
+                Cell last = path.cells.Last();
 
-                if (last.typename == "Industrial") {
-                    if(((Industrial)last).workers.Count < last.cell.industrialCapacity) {
+                if (last.tile != null && last.tile.typename == "Industrial") {
+                    if(((Industrial)last.tile).workers.Count < last.industrialCapacity) {
                         if (!pathCache.ContainsKey(origin))
                             pathCache.Add(origin, new List<Path> { path });
                         else
@@ -297,15 +302,13 @@ public class Grid : MonoBehaviour {
                     }
                 }
 
-                float distanceFromOrigin = (last.transform.position - origin.tile.transform.position).magnitude;
-                foreach (Tile t in last.cell.adjacent.Select(t => t.tile).ToList()) {
-                    if (!path.cells.Any(c => c.tile == t)) {
-                        if ((t.transform.position - origin.tile.transform.position).magnitude > distanceFromOrigin) {
-                            float cost = last.cell.roadConnections.Contains(t.cell) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
-                            if (path.cost + cost <= maxPathCost) {
-                                Path p = path.Add(t.cell, cost);
-                                queue.Enqueue(p, p.cost);
-                            }
+                float distanceFromOrigin = (last.transform.position - origin.transform.position).magnitude;
+                foreach (Cell c in last.adjacent) {
+                    if (!path.cells.Contains(c)) {
+                        float cost = last.roadConnections.Contains(c) ? 1f / (Resident.WalkSpeed * Resident.DriveSpeedMultiplier) : 1f / Resident.WalkSpeed;
+                        if (path.cost + cost <= maxPathCost) {
+                            Path p = path.Add(c, cost);
+                            queue.Enqueue(p, p.cost);
                         }
                     }
                 }
@@ -322,7 +325,6 @@ public class Grid : MonoBehaviour {
         foreach(Residential t in residentialTiles) {
             c += t.cell.residentialCapacity;
         }
-        residentialCapacity = c;
         return c;
     }
 
@@ -333,6 +335,30 @@ public class Grid : MonoBehaviour {
         }
         industrialCapacity = c;
         return c;
+    }
+
+    public int GetMaxResidentialCapacity() {
+        int max = 1;
+
+        foreach (Cell cell in cells) {
+            if (cell.cellData.baseResidentialCapacity > max) {
+                max = cell.cellData.baseResidentialCapacity;
+            }
+        }
+
+        return max;
+    }
+
+    public int GetMaxIndustrialCapacity() {
+        int max = 1;
+
+        foreach (Cell cell in cells) {
+            if (cell.cellData.baseIndustrialCapacity > max) {
+                max = cell.cellData.baseIndustrialCapacity;
+            }
+        }
+
+        return max;
     }
 }
 

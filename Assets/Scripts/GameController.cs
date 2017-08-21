@@ -8,13 +8,15 @@ public class GameController : MonoBehaviour {
     public UnityStandardAssets.ImageEffects.BlurOptimized blur;
     public SceneController sceneControllerObj;
     public LensButton[] pointerButtons;
+    public Window pauseWindow;
+    public Window winWindow;
+    public Window tipsWindow;
     public GameObject emptyTileObj;
     public GameObject residentialTileObj;
     public GameObject industrialTileObj;
     public GameObject residentObj;
     public GameObject residentialLegend;
     public GameObject industrialLegend;
-    public GameObject pauseMenuCanvas;
     public GameObject uiBlock;
     public CameraFly cameraFly;
     public Grid grid;
@@ -26,15 +28,13 @@ public class GameController : MonoBehaviour {
     public Text tooltipTitle;
     public Text tooltipText;
     public Text successfulDailyCommutesText;
-    public Text commutesWindowCountText;
-    public Text commutesWindowGoalText;
+    public Text commutesPanelCountText;
+    public Text commutesPanelGoalText;
     public Text winCommutesText;
     public Image pauseButton;
     public Image playButton;
     public Image fastForwardButton;
-    public CanvasGroup commutesWindow;
-    public CanvasGroup pauseMenu;
-    public CanvasGroup winScreen;
+    public CanvasGroup commutesPanel;
     public CanvasGroup mainUI;
     public float commuteToWorkTime = 10f;
     public float assertWorkTime = 20f;
@@ -65,9 +65,7 @@ public class GameController : MonoBehaviour {
     [HideInInspector]
     public bool firstResidentialPlaced;
     [HideInInspector]
-    public bool pauseMenuShown;
-    [HideInInspector]
-    public bool winScreenShown;
+    public Window activeWindow;
 
     SceneController sceneController;
     float timer;
@@ -75,8 +73,8 @@ public class GameController : MonoBehaviour {
     int goalCommutes;
     int successfulDailyCommutes;
     bool pauseMenuAnimating;
-    bool won;
     bool timeControlsEnabled;
+    bool won;
 
     private void Awake() {
         if(Application.platform == RuntimePlatform.Android) {
@@ -84,7 +82,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    private void Start() {        
+    private void Start() { 
         try {
             sceneController = GameObject.FindGameObjectWithTag("SceneController").GetComponent<SceneController>();
         } catch(System.Exception e) {
@@ -98,13 +96,13 @@ public class GameController : MonoBehaviour {
         maxResidentialCapacityText.text = maxResidentialCapacity.ToString();
         maxIndustrialCapacityText.text = maxIndustrialCapacity.ToString();
         goalCommutes = data.goalCommutes;
-        commutesWindowGoalText.text = goalCommutes + " to Win";
+        commutesPanelGoalText.text = goalCommutes + " to Win";
 
         if (grid.roadsAvailable == 0)
             pointerButtons[2].gameObject.SetActive(false);
 
         //StartCoroutine(DailyCommutesAnimation());
-        //StartCoroutine(WinAnimation());
+        //Win();
     }
 
     private void Update() {
@@ -122,6 +120,9 @@ public class GameController : MonoBehaviour {
                     break;
                 case Stage.CommutingToWork:
                     if (timer > assertWorkTime) {
+                        if (successfulDailyCommutes == 0) {
+                            StartCoroutine(SkipToHome());
+                        }
                         Stack<Resident> residentStack = new Stack<Resident>(residents);
                         while (residentStack.Count > 0) {
                             Resident resident = residentStack.Pop();
@@ -133,6 +134,7 @@ public class GameController : MonoBehaviour {
                     break;
                 case Stage.Working:
                     if (timer > commuteHomeTime) {
+                        
                         foreach (Resident resident in residents) {
                             resident.SetGoal(Resident.Status.Home);
                         }
@@ -151,7 +153,7 @@ public class GameController : MonoBehaviour {
                         StartCoroutine(clock.UpdateText("At Home"));
                         timer = 0f;
                         if (!won && successfulDailyCommutes >= goalCommutes) {
-                            StartCoroutine(WinAnimation());
+                            Win();
                         }
                         else {
                             StartCoroutine(DailyCommutesAnimation());
@@ -172,14 +174,12 @@ public class GameController : MonoBehaviour {
             }
         }
 
-        if (winScreenShown) {
-            if (!pauseMenuAnimating && pauseMenuShown) {
-                StartCoroutine(HidePauseMenu());
-            }
-        }
-
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            Pause();
+            if(activeWindow != pauseWindow) {
+                pauseWindow.Show();
+            } else {
+                pauseWindow.Hide();
+            }
         }
     }
 
@@ -206,10 +206,10 @@ public class GameController : MonoBehaviour {
     IEnumerator DailyCommutesAnimation() {
         commutesTextAnimationTimer = 0f;
 
-        commutesWindowCountText.text = successfulDailyCommutes.ToString();
-        commutesWindow.alpha = 1;
+        commutesPanelCountText.text = successfulDailyCommutes.ToString();
+        commutesPanel.alpha = 1;
 
-        RectTransform rect = commutesWindow.GetComponent<RectTransform>();
+        RectTransform rect = commutesPanel.GetComponent<RectTransform>();
         Vector2 origin = rect.anchoredPosition = new Vector2(0f, 60f);
         Vector2 target = new Vector2(0f, -40f);
         float t = 0f;
@@ -233,7 +233,7 @@ public class GameController : MonoBehaviour {
             rect.anchoredPosition = Vector2.Lerp(origin, target, v);
             yield return null;
         }
-        commutesWindow.alpha = 0;
+        commutesPanel.alpha = 0;
 
         t = 0f;
         while (t < .5f) {
@@ -246,124 +246,22 @@ public class GameController : MonoBehaviour {
     }
 
     public void MainMenu() {
+        if(activeWindow != null) {
+            activeWindow.Deactivate();
+            activeWindow = null;
+        }
         StartCoroutine(cameraFly.FlyToMenu());
         mainUI.alpha = 0;
-        winScreen.alpha = 0;
-        pauseMenu.alpha = 0;
+        winWindow.Deactivate();
     }
-
-
-    public void Pause() {
-        if (pauseMenuAnimating || winScreenShown) return;
-        if (!pauseMenuShown) {
-            StartCoroutine(ShowPauseMenu());
-        }
-        else {
-            StartCoroutine(HidePauseMenu());
-        }
-    }
-
-    IEnumerator ShowPauseMenu() {
-        pauseMenuAnimating = true;
-        SetGameSpeed(GameSpeed.Paused);
-        pauseMenuShown = true;
-        blur.enabled = true;
-        pauseMenuCanvas.SetActive(true);
-        uiBlock.SetActive(true);
-
-        RectTransform menu = pauseMenu.GetComponent<RectTransform>();
-        menu.anchoredPosition = new Vector2(0, -Screen.height);
-        float t = 0f;
-        while (t < 1f) {
-            t += Time.unscaledDeltaTime * 2f;
-            float y = -Screen.height - -Screen.height * Mathf.Sin(t * Mathf.PI / 2f);
-            menu.anchoredPosition = new Vector2(0, y);
-            yield return null;
-        }
-
-        pauseMenu.blocksRaycasts = true;
-
-        pauseMenuAnimating = false;
-    }
-
-    IEnumerator HidePauseMenu() {
-        pauseMenuAnimating = true;
-
-        RectTransform menu = pauseMenu.GetComponent<RectTransform>();
-        pauseMenu.blocksRaycasts = false;
-        blur.enabled = false;
-
-        float t = 0f;
-        while (t < 1f) {
-            t += Time.unscaledDeltaTime * 2f;
-            float y = -Screen.height - -Screen.height * Mathf.Sin((1 - t) * Mathf.PI / 2f);
-            menu.anchoredPosition = new Vector2(0, y);
-            yield return null;
-        }
-
-        pauseMenuShown = false;
-        SetGameSpeed(GameSpeed.Normal);
-        pauseMenuCanvas.SetActive(false);
-        uiBlock.SetActive(false);
-
-        pauseMenuAnimating = false;
-    }
-
-    IEnumerator WinAnimation() {
-        float t = 0f;
-        while (t < 1f) {
-            t += Time.unscaledDeltaTime;
-            float v = Mathf.Sin(Mathf.PI * t / 2f);
-            Time.timeScale = 1 - v;
-            yield return null;
-        }
-        SetGameSpeed(GameSpeed.Paused);
-
-        winScreenShown = true;
+    
+    public void Win() {
         won = true;
-        uiBlock.SetActive(true);
-        winCommutesText.text = successfulDailyCommutes.ToString();
-        StartCoroutine(cameraFly.FlyToOverview());
-        commutesWindowGoalText.enabled = false;
-
         mainUI.alpha = 0;
-        t = 0f;
-        while(t < 1f) {
-            t += Time.unscaledDeltaTime;
-            winScreen.alpha = t;
-            yield return null;
-        }
-
-        int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-        PlayerPrefs.SetInt("CurrentLevel", currentLevel + 1);
-
-        winScreen.blocksRaycasts = true;
-    }
-
-    public void HideWinScreen() {
-        StartCoroutine(HideWinScreenCoroutine());
-    }
-
-    IEnumerator HideWinScreenCoroutine() {
-        winScreen.blocksRaycasts = false;
-        commutesTextAnimationTimer = 0;
-        uiBlock.SetActive(false);
-        StartCoroutine(cameraFly.ReturnToMap());
-
-        RectTransform rect = winScreen.GetComponent<RectTransform>();
-        float t = 0f;
-        while (t < 1f) {
-            t += Time.unscaledDeltaTime * 2f;
-            winScreen.alpha = 1 - t;
-            mainUI.alpha = t;
-            yield return null;
-        }
-        winScreen.alpha = 0;
-
-        winScreenShown = false;
-        SetGameSpeed(GameSpeed.Normal);
+        winCommutesText.text = successfulDailyCommutes.ToString();
+        commutesPanelGoalText.enabled = false;
+        winWindow.Show();
         successfulDailyCommutes = 0;
-        commutesTextAnimationTimer = 1f;
     }
 
     private void OnGUI() {
@@ -477,6 +375,13 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    IEnumerator SkipToHome() {
+        while(timer < assertHomeTime - 1f) {
+            timer += Time.deltaTime * 15f;
+            yield return null;
+        }
+    }
+
     public void DeselectPointerButtons() {
         foreach(LensButton pointerButton in pointerButtons) {
             pointerButton.Deselect();
@@ -485,6 +390,14 @@ public class GameController : MonoBehaviour {
 
     public float GetTimer() {
         return timer;
+    }
+
+    public void NextLevel() {
+        sceneController.LoadLevel(sceneController.currentLevel + 1);
+    }
+
+    public void Restart() {
+        sceneController.LoadLevel(sceneController.currentLevel);
     }
 }
 
