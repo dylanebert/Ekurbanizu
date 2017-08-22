@@ -30,6 +30,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 15b128b6e00e4324096c2b1c2b3749eb, type: 2}
   - {fileID: 11400000, guid: e9e36fa3102fbde44b461285d97710f3, type: 2}
   - {fileID: 11400000, guid: d5dc8b5004c29a74e8d097774fd1cef9, type: 2}
+  - {fileID: 11400000, guid: 849948a8d7fa61f4899b845725dcb575, type: 2}
   roadCount: 2
   mapSize: {x: 3, y: 1}
   goalCommutes: 10

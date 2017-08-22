@@ -420,11 +420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952f34e55c2d7574e8a0d15b17089857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
-  - {fileID: 11400000, guid: 53a36a307e277b84d9a14fd7190d82d0, type: 2}
-  - {fileID: 11400000, guid: 06eb72ea317a5a740b8d4e922c43b9a0, type: 2}
-  - {fileID: 11400000, guid: f93507b10b52d6945b85ef05eb7cfe09, type: 2}
-  - {fileID: 11400000, guid: eace03ef17c97f749bfd01d6a41f8c16, type: 2}
   sceneControllerObj: {fileID: 1495905208878906, guid: d2ac58b73910967479559caf874b8ac2,
     type: 2}
   levelObj: {fileID: 1620519825958788, guid: 6cb7c347f70462f4585177860ded2f07, type: 2}
@@ -2867,7 +2862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 1}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
