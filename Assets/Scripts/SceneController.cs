@@ -43,4 +43,8 @@ public class SceneController : MonoBehaviour {
     public void Exit() {
         Application.Quit();
     }
+
+    public void ToggleFullScreen() {
+        Screen.fullScreen = !Screen.fullScreen;
+    }
 }

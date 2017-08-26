@@ -44,9 +44,9 @@ public class Road : MonoBehaviour {
     }
 
     public void MouseOver() {
-        if(!active)
+        if (!active)
             SetColor(Palette.OffBlack);
-        else if(gameController.lens == Lens.Erase) {
+        else if (gameController.lens == Lens.Erase) {
             SetColor(Color.Lerp(Palette.OffBlack, Palette.Gray, .5f));
         }
     }
@@ -60,6 +60,7 @@ public class Road : MonoBehaviour {
     }
 
     public void MouseUp() {
+        Debug.Log(a.transform.position + ", " + b.transform.position);
         if (!active) {
             SetColor(Palette.OffBlack);
             active = true;

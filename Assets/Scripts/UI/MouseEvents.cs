@@ -43,13 +43,15 @@ public class MouseEvents : MonoBehaviour {
 
             RaycastHit2D roadHit = Physics2D.Raycast(ray.origin, ray.direction, 20f, 1 << 10);
             if (roadHit.collider != null) {
-                if (mouseOverRoad != null)
-                    mouseOverRoad.MouseExit();
-                mouseOverRoad = roadHit.transform.parent.GetComponent<Road>();
-                mouseOverRoad.MouseOver();
+                if (mouseOverRoad == null) {
+                    mouseOverRoad = roadHit.transform.parent.GetComponent<Road>();
+                    mouseOverRoad.MouseOver();
+                    Debug.Log(mouseOverRoad);
+                }
             }
             else {
                 if (mouseOverRoad != null) {
+                    Debug.Log("Exit " + mouseOverRoad);
                     mouseOverRoad.MouseExit();
                     mouseOverRoad = null;
                 }

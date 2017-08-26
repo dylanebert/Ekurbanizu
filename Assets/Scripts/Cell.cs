@@ -45,7 +45,7 @@ public class Cell : MonoBehaviour {
 
     public void CalculateAdjacent() {
         foreach (Collider2D col in Physics2D.OverlapCircleAll(transform.position, HexMetrics.OuterRadius, 1 << 12)) {
-            if (tile == null || col.gameObject.GetInstanceID() != tile.gameObject.GetInstanceID()) {
+            if (tile == null || col.GetComponent<Cell>().tile.gameObject.GetInstanceID() != tile.gameObject.GetInstanceID()) {
                 adjacent.Add(col.GetComponent<Cell>());
             }
         }

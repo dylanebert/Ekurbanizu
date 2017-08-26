@@ -115,11 +115,6 @@ public class Grid : MonoBehaviour {
             }
             cell.adjacent.Clear();
         }
-        
-        List<Cell> combinedCells = new List<Cell>(cells.Concat(bridgeCells));
-        foreach (Cell cell in combinedCells) {
-            
-        }
 
         roadsAvailable = gridData.roadCount;
 
