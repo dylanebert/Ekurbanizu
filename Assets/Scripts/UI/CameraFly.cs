@@ -35,6 +35,8 @@ public class CameraFly : MonoBehaviour {
             Camera.main.orthographicSize = Mathf.Lerp(1, xBound * .75f, v);
             yield return null;
         }
+        transform.position = target;
+        transform.rotation = Quaternion.identity;
         animating = false;
     }
 
